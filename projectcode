@@ -1,0 +1,372 @@
+# First, let's install required packages
+!pip install yfinance pandas numpy scikit-fuzzy matplotlib ipywidgets
+
+import warnings
+warnings.filterwarnings('ignore')
+
+import yfinance as yf
+import pandas as pd
+import numpy as np
+import skfuzzy as fuzz
+import matplotlib.pyplot as plt
+from IPython.display import display, HTML, clear_output
+import ipywidgets as widgets
+import random
+from datetime import datetime, timedelta
+
+# Define sector mappings
+SECTOR_MAPPING = {
+    'IT': ['TCS.NS', 'INFY.NS', 'WIPRO.NS', 'HCLTECH.NS', 'TECHM.NS', 'LTIM.NS', 'MPHASIS.NS'],
+    'BANKING': ['HDFCBANK.NS', 'ICICIBANK.NS', 'SBIN.NS', 'AXISBANK.NS', 'KOTAKBANK.NS', 'PNB.NS', 'IDFCFIRSTB.NS'],
+    'PHARMA': ['SUNPHARMA.NS', 'DRREDDY.NS', 'CIPLA.NS', 'DIVISLAB.NS', 'BIOCON.NS', 'AUROPHARMA.NS', 'LUPIN.NS'],
+    'FMCG': ['HINDUNILVR.NS', 'ITC.NS', 'NESTLEIND.NS', 'BRITANNIA.NS', 'DABUR.NS', 'GODREJCP.NS', 'MARICO.NS'],
+    'AUTOMOBILE': ['TATAMOTORS.NS', 'MARUTI.NS', 'M&M.NS', 'BAJAJ-AUTO.NS', 'HEROMOTOCO.NS', 'TVSMOTOR.NS', 'ASHOKLEY.NS'],
+    'ENERGY': ['RELIANCE.NS', 'ONGC.NS', 'NTPC.NS', 'POWERGRID.NS', 'TATAPOWER.NS', 'BPCL.NS', 'IOC.NS'],
+    'METALS': ['TATASTEEL.NS','HINDALCO.NS', 'COALINDIA.NS', 'VEDL.NS', 'NMDC.NS', 'SAIL.NS'],
+    'REAL ESTATE': ['DLF.NS', 'GODREJPROP.NS', 'OBEROIRLTY.NS', 'PHOENIXLTD.NS', 'BRIGADE.NS', 'PRESTIGE.NS'],
+    'CONSUMER DURABLES': ['VOLTAS.NS', 'WHIRLPOOL.NS', 'HAVELLS.NS', 'BLUESTARCO.NS', 'CROMPTON.NS', 'DIXON.NS'],
+    'TELECOM': ['BHARTIARTL.NS', 'IDEA.NS', 'TATACOMM.NS', 'MTNL.NS']
+}
+
+# Enhanced style definitions
+STYLE = """
+<style>
+.widget-label {
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
+.custom-button {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+}
+.stock-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+.portfolio-title {
+    text-align: center;
+    font-size: 36px !important;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 20px 0;
+    font-family: 'Arial', sans-serif;
+}
+.analysis-results {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+.analysis-results h3 {
+    color: #2c3e50;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+.stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+.stock-table th, .stock-table td {
+    padding: 12px;
+    text-align: center; /* Centering text */
+    border-bottom: 1px solid #ddd;
+}
+.stock-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+.stock-table tr:hover {
+    background-color: #f1f1f1;
+}
+.pie-chart {
+    margin: 20px 0;
+}
+</style>
+"""
+
+display(HTML(STYLE))
+
+
+def fetch_and_calculate_indicators(stock_symbol):
+    """Fetch stock data and calculate technical indicators"""
+    try:
+        data = yf.download(stock_symbol, period="6mo", interval="1d", progress=False)
+        if data.empty:
+            return None, f"No data available for {stock_symbol}"
+
+        # Calculate RSI
+        delta = data['Close'].diff(1)
+        gain = delta.where(delta > 0, 0)
+        loss = -delta.where(delta < 0, 0)
+        avg_gain = gain.rolling(window=14).mean()
+        avg_loss = loss.rolling(window=14).mean()
+        rs = avg_gain / avg_loss
+        data['RSI'] = 100 - (100 / (1 + rs))
+
+        # Calculate MACD
+        ema12 = data['Close'].ewm(span=12, adjust=False).mean()
+        ema26 = data['Close'].ewm(span=26, adjust=False).mean()
+        data['MACD'] = ema12 - ema26
+
+        # Calculate EMA (20-period)
+        data['EMA'] = data['Close'].ewm(span=20, adjust=False).mean()
+
+        return data, None
+    except Exception as e:
+        return None, f"Error fetching data for {stock_symbol}: {str(e)}"
+
+def whale_optimization(filtered_stocks, iterations=100):
+    """Whale Optimization Algorithm"""
+    try:
+        num_stocks = len(filtered_stocks)
+        if num_stocks == 0:
+            return None, "No stocks to optimize"
+
+        # Initialize parameters
+        best_weights = np.random.dirichlet(np.ones(num_stocks), size=1)[0]
+        best_score = -np.inf
+
+        # Extract numerical values for calculations
+        returns = [stock['current_price'] for stock in filtered_stocks]
+
+        for _ in range(iterations):
+            new_weights = np.random.dirichlet(np.ones(num_stocks), size=1)[0]
+
+            # Portfolio score calculation
+            portfolio_return = sum(r * w for r, w in zip(returns, new_weights))
+            portfolio_risk = np.std([r * w for r, w in zip(returns, new_weights)])
+            score = portfolio_return / portfolio_risk if portfolio_risk != 0 else 0
+
+            if score > best_score:
+                best_weights = new_weights
+                best_score = score
+
+        return dict(zip([stock['symbol'] for stock in filtered_stocks], best_weights)), None
+    except Exception as e:
+        return None, f"Error in Whale Optimization: {str(e)}"
+
+def apply_fuzzy_logic(data):
+    """Apply fuzzy logic using RSI, MACD, and EMA to classify stock trends"""
+    try:
+        current_price = float(data['Close'].iloc[-1])
+        current_ema = float(data['EMA'].iloc[-1])
+        current_rsi = float(data['RSI'].iloc[-1])
+        current_macd = float(data['MACD'].iloc[-1])
+
+        # Classification logic
+        if current_rsi > 55 and current_macd > 0 and current_price > current_ema:
+            return 'Bullish', None
+        elif current_rsi < 45 and current_macd < 0 and current_price < current_ema:
+            return 'Bearish', None
+        else:
+            return 'Neutral', None
+    except Exception as e:
+        return None, f"Error in fuzzy logic analysis: {str(e)}"
+
+
+class PortfolioOptimizer:
+    def __init__(self):
+        self.selected_stocks = []
+        self.create_ui()
+
+    def create_ui(self):
+        """Create the user interface using IPython widgets"""
+        # Title
+        display(HTML('<h1 class="portfolio-title">Portfolio Optimizer</h1>'))
+
+        # Sector selection
+        self.sector_dropdown = widgets.SelectMultiple(
+            options=list(SECTOR_MAPPING.keys()),
+            description='Sectors:',
+            style={'description_width': 'initial'}
+        )
+
+        # Individual stock input
+        self.stock_input = widgets.Text(
+            description='Add Stock:',
+            placeholder='Enter NSE stock symbol (e.g., RELIANCE.NS)',
+            style={'description_width': 'initial'}
+        )
+
+        # Buttons
+        self.add_stock_btn = widgets.Button(
+            description='Add Stock',
+            button_style='success',
+            layout=widgets.Layout(width='150px')
+        )
+        self.clear_btn = widgets.Button(
+            description='Clear All',
+            button_style='danger',
+            layout=widgets.Layout(width='150px')
+        )
+        self.analyze_btn = widgets.Button(
+            description='Analyze Portfolio',
+            button_style='primary',
+            layout=widgets.Layout(width='150px')
+        )
+
+        # Output areas
+        self.stock_list_output = widgets.Output()
+        self.analysis_output = widgets.Output()
+
+        # Button callbacks
+        self.add_stock_btn.on_click(self.add_stock)
+        self.clear_btn.on_click(self.clear_stocks)
+        self.analyze_btn.on_click(self.analyze_portfolio)
+        self.sector_dropdown.observe(self.update_sector_stocks, names='value')
+
+        # Layout
+        display(widgets.VBox([
+            widgets.HBox([self.sector_dropdown]),
+            widgets.HBox([self.stock_input, self.add_stock_btn, self.clear_btn]),
+            self.stock_list_output,
+            self.analyze_btn,
+            self.analysis_output
+        ]))
+
+
+    def clear_stocks(self, b):
+        """Clear all selected stocks"""
+        self.selected_stocks = []
+        self.sector_dropdown.value = ()
+        self.update_stock_list()
+        with self.analysis_output:
+            clear_output()
+
+    def plot_stock_performance(self, stock_data):
+        """Create interactive stock performance charts"""
+
+        fig_candle = plt.figure(figsize=(12, 6))
+        plt.plot(stock_data['Close'], label='Close Price', color='blue')
+        plt.title('Stock Price Performance (Line)')
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.show()
+
+
+        fig_line = plt.figure(figsize=(12, 6))
+        plt.plot(stock_data['Close'], label='Close Price', color='blue')
+        plt.plot(stock_data['EMA'], label='EMA (20)', linestyle='--', color='orange')
+        plt.title('Stock Price Performance (Line with EMA)')
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.show()
+
+        return fig_candle, fig_line
+
+    def analyze_portfolio(self, b):
+        """Analyze the selected portfolio"""
+        with self.analysis_output:
+            clear_output()
+            if not self.selected_stocks:
+                print("Please select stocks to analyze")
+                return
+
+            print("Analyzing portfolio...")
+            results = []
+            stock_data = {}
+            portfolio_values = []
+
+            # Analyze each stock
+            for symbol in self.selected_stocks:
+                data, error = fetch_and_calculate_indicators(symbol)
+                if error:
+                    print(error)
+                    continue
+
+                stock_data[symbol] = data
+                current_price = float(data['Close'].iloc[-1])
+
+                results.append({
+                    'symbol': symbol,
+                    'current_price': round(current_price, 2),
+                    'rsi': round(float(data['RSI'].iloc[-1]), 2),
+                    'macd': round(float(data['MACD'].iloc[-1]), 2),
+                    'ema': round(float(data['EMA'].iloc[-1]), 2),
+                    'outlook': 'Bullish' if current_price > float(data['EMA'].iloc[-1]) else 'Bearish'
+                })
+
+                # Calculate daily portfolio value (equal weights initially)
+                if len(portfolio_values) == 0:
+                    portfolio_values = data['Close'] / len(self.selected_stocks)
+                else:
+                    portfolio_values += data['Close'] / len(self.selected_stocks)
+
+            print("Completed analyzing.")
+
+            # Display results table
+            df_results = pd.DataFrame(results)
+            display(HTML("<div class='analysis-results'><h3>Stock Analysis Results</h3></div>"))
+            display(HTML(df_results.to_html(classes='stock-table', index=False)))
+
+            # Filter bullish stocks and optimize
+            bullish_stocks = [r for r in results if r['outlook'] == 'Bullish']
+            if bullish_stocks:
+                weights, error = whale_optimization(bullish_stocks)
+                if error:
+                    print(error)
+                else:
+                    display(HTML("<div class='analysis-results'><h3>Portfolio Optimization Results</h3></div>"))
+
+                    # Create pie chart using Matplotlib
+                    labels = list(weights.keys())
+                    values = list(weights.values())
+
+                    fig_pie = plt.figure(figsize=(8, 8))
+                    plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, wedgeprops={'edgecolor': 'black'})
+                    plt.title('Optimized Portfolio Weights')
+                    plt.show()
+
+            else:
+                print("No bullish stocks found for optimization")
+
+
+    def add_stock(self, b):
+     """Add individual stock to the portfolio and clear previous analysis"""
+     stock = self.stock_input.value.strip().upper()
+     if stock and stock not in self.selected_stocks:
+        self.selected_stocks.append(stock)
+        self.update_stock_list()
+
+      # Clear previous analysis
+     with self.analysis_output:
+        clear_output()
+
+     self.stock_input.value = ""
+
+    def update_sector_stocks(self, change):
+     """Update selected stocks based on sector selection and clear previous analysis"""
+     sector_stocks = []
+     for sector in self.sector_dropdown.value:
+        sector_stocks.extend(SECTOR_MAPPING[sector])
+
+     self.selected_stocks = list(set(self.selected_stocks + sector_stocks))
+     self.update_stock_list()
+
+     # Clear previous analysis
+     with self.analysis_output:
+        clear_output()
+
+
+    def update_stock_list(self):
+        """Update the displayed list of selected stocks"""
+        with self.stock_list_output:
+            clear_output()
+            display(HTML("<div class='stock-list'><strong>Selected Stocks:</strong><ul>"))
+            for stock in sorted(self.selected_stocks):
+                display(HTML(f"<li>{stock}</li>"))
+            display(HTML("</ul></div>"))
+
+# Create and display the optimizer
+optimizer = PortfolioOptimizer()
