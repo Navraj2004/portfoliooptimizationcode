@@ -102,5 +102,5 @@ This makes it effective for **non-linear, multi-objective financial problems**.
 
 ### 📷 Screenshots
 
-![Dashboard Screenshot](assets/screenshot1.png)
+![Dashboard Screenshot]([assets/screenshot1.png](https://github.com/Navraj2004/portfoliooptimizationcode/blob/main/Screenshot%202025-05-26%20165746.png))
 ![Result Chart](assets/result_chart.png)
