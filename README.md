@@ -100,7 +100,3 @@ This makes it effective for **non-linear, multi-objective financial problems**.
 - Visual performance tracking
 
 
-### 📷 Screenshots
-
-![Dashboard Screenshot]((https://github.com/Navraj2004/portfoliooptimizationcode/blob/main/Screenshot%202025-05-26%20165905.png?raw=true)))
-![Result Chart](assets/result_chart.png)
