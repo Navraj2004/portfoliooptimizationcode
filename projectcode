@@ -28,74 +28,273 @@ SECTOR_MAPPING = {
     'TELECOM': ['BHARTIARTL.NS', 'IDEA.NS', 'TATACOMM.NS', 'MTNL.NS']
 }
 
-# Enhanced style definitions
-STYLE = """
+# Enhanced modern style definitions
+MODERN_STYLE = """
 <style>
-.widget-label {
-    font-size: 16px !important;
-    font-weight: bold !important;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
-.custom-button {
-    background-color: #4CAF50 !important;
-    color: white !important;
-    padding: 10px 20px !important;
-    border-radius: 5px !important;
-}
-.stock-list {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-}
-.portfolio-title {
+
+.portfolio-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 20px;
+    border-radius: 20px;
     text-align: center;
-    font-size: 36px !important;
-    font-weight: bold;
-    color: #2c3e50;
+    margin: 20px 0 30px 0;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+.portfolio-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.portfolio-header p {
+    font-size: 1.2rem;
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+}
+
+.modern-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
     margin: 20px 0;
-    font-family: 'Arial', sans-serif;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
 }
-.analysis-results {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin: 20px 0;
-}
-.analysis-results h3 {
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
     color: #2c3e50;
-    font-size: 24px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #667eea;
+    position: relative;
 }
-.stock-table {
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+.widget-area {
+    background: #f8f9ff;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border: 1px solid #e5e7eb;
+}
+
+.selected-stocks-area {
+    background: linear-gradient(135deg, #f8f9ff, #fff5f5);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border: 1px solid #e5e7eb;
+    min-height: 120px;
+}
+
+.stock-chip {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 8px 16px;
+    margin: 5px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.stock-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.results-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 25px 0;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
-.stock-table th, .stock-table td {
-    padding: 12px;
-    text-align: center; /* Centering text */
-    border-bottom: 1px solid #ddd;
-}
-.stock-table th {
-    background-color: #4CAF50;
+
+.results-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
+    padding: 18px 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.stock-table tr:hover {
-    background-color: #f1f1f1;
+
+.results-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 500;
 }
-.pie-chart {
+
+.results-table tr:hover {
+    background: linear-gradient(135deg, #f8f9ff, #fff5f5);
+    transform: scale(1.01);
+    transition: all 0.3s ease;
+}
+
+.bullish {
+    color: #22c55e;
+    font-weight: 600;
+    background: rgba(34, 197, 94, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.bearish {
+    color: #ef4444;
+    font-weight: 600;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.neutral {
+    color: #f59e0b;
+    font-weight: 600;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.analysis-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
     margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.status-message {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+.status-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #16a34a;
+}
+
+.status-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
+.status-info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #2563eb;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .portfolio-header h1 {
+        font-size: 2rem;
+    }
 }
 </style>
 """
 
-display(HTML(STYLE))
+display(HTML(MODERN_STYLE))
 
-
+# Your existing backend functions (keeping them exactly the same)
 def fetch_and_calculate_indicators(stock_symbol):
     """Fetch stock data and calculate technical indicators"""
     try:
@@ -172,46 +371,53 @@ def apply_fuzzy_logic(data):
     except Exception as e:
         return None, f"Error in fuzzy logic analysis: {str(e)}"
 
-
-class PortfolioOptimizer:
+class ModernPortfolioOptimizer:
     def __init__(self):
         self.selected_stocks = []
-        self.create_ui()
+        self.create_modern_ui()
 
-    def create_ui(self):
-        """Create the user interface using IPython widgets"""
-        # Title
-        display(HTML('<h1 class="portfolio-title">Portfolio Optimizer</h1>'))
+    def create_modern_ui(self):
+        """Create the modern user interface"""
+        # Display header
+        display(HTML('''
+        <div class="portfolio-header">
+            <h1>🚀 Portfolio Optimizer</h1>
+            <p>AI-Powered Stock Analysis & Portfolio Optimization</p>
+        </div>
+        '''))
 
-        # Sector selection
+        # Create widgets with modern styling
         self.sector_dropdown = widgets.SelectMultiple(
             options=list(SECTOR_MAPPING.keys()),
-            description='Sectors:',
-            style={'description_width': 'initial'}
+            description='Select Sectors:',
+            style={'description_width': 'initial'},
+            layout=widgets.Layout(width='100%', height='200px')
         )
 
-        # Individual stock input
         self.stock_input = widgets.Text(
-            description='Add Stock:',
+            description='Add Individual Stock:',
             placeholder='Enter NSE stock symbol (e.g., RELIANCE.NS)',
-            style={'description_width': 'initial'}
+            style={'description_width': '140px'},
+            layout=widgets.Layout(width='70%')
         )
 
-        # Buttons
+        # Buttons with modern styling
         self.add_stock_btn = widgets.Button(
-            description='Add Stock',
+            description='➕ Add Stock',
             button_style='success',
-            layout=widgets.Layout(width='150px')
+            layout=widgets.Layout(width='120px', height='35px')
         )
+        
         self.clear_btn = widgets.Button(
-            description='Clear All',
+            description='🗑️ Clear All',
             button_style='danger',
-            layout=widgets.Layout(width='150px')
+            layout=widgets.Layout(width='120px', height='35px')
         )
+        
         self.analyze_btn = widgets.Button(
-            description='Analyze Portfolio',
+            description='🔍 Analyze Portfolio',
             button_style='primary',
-            layout=widgets.Layout(width='150px')
+            layout=widgets.Layout(width='200px', height='45px')
         )
 
         # Output areas
@@ -224,15 +430,38 @@ class PortfolioOptimizer:
         self.analyze_btn.on_click(self.analyze_portfolio)
         self.sector_dropdown.observe(self.update_sector_stocks, names='value')
 
-        # Layout
-        display(widgets.VBox([
-            widgets.HBox([self.sector_dropdown]),
-            widgets.HBox([self.stock_input, self.add_stock_btn, self.clear_btn]),
-            self.stock_list_output,
-            self.analyze_btn,
-            self.analysis_output
-        ]))
+        # Display the interface
+        display(HTML('<div class="modern-container"><div class="section-title">🏢 Sector Selection</div></div>'))
+        display(HTML('<div class="widget-area">'))
+        display(self.sector_dropdown)
+        display(HTML('</div>'))
 
+        display(HTML('<div class="modern-container"><div class="section-title">📈 Individual Stock Entry</div></div>'))
+        display(HTML('<div class="widget-area">'))
+        display(widgets.HBox([self.stock_input, self.add_stock_btn, self.clear_btn]))
+        display(HTML('</div>'))
+
+        display(HTML('<div class="modern-container"><div class="section-title">📊 Selected Stocks</div></div>'))
+        display(self.stock_list_output)
+
+        display(HTML('<div class="modern-container">'))
+        display(self.analyze_btn)
+        display(HTML('</div>'))
+
+        display(self.analysis_output)
+
+        # Initialize stock list display
+        self.update_stock_list()
+
+    def add_stock(self, b):
+        """Add individual stock to the portfolio"""
+        stock = self.stock_input.value.strip().upper()
+        if stock and stock not in self.selected_stocks:
+            self.selected_stocks.append(stock)
+            self.update_stock_list()
+            with self.analysis_output:
+                clear_output()
+        self.stock_input.value = ""
 
     def clear_stocks(self, b):
         """Clear all selected stocks"""
@@ -242,131 +471,509 @@ class PortfolioOptimizer:
         with self.analysis_output:
             clear_output()
 
-    def plot_stock_performance(self, stock_data):
-        """Create interactive stock performance charts"""
-
-        fig_candle = plt.figure(figsize=(12, 6))
-        plt.plot(stock_data['Close'], label='Close Price', color='blue')
-        plt.title('Stock Price Performance (Line)')
-        plt.xlabel('Date')
-        plt.ylabel('Price')
-        plt.legend()
-        plt.show()
-
-
-        fig_line = plt.figure(figsize=(12, 6))
-        plt.plot(stock_data['Close'], label='Close Price', color='blue')
-        plt.plot(stock_data['EMA'], label='EMA (20)', linestyle='--', color='orange')
-        plt.title('Stock Price Performance (Line with EMA)')
-        plt.xlabel('Date')
-        plt.ylabel('Price')
-        plt.legend()
-        plt.show()
-
-        return fig_candle, fig_line
-
-    def analyze_portfolio(self, b):
-        """Analyze the selected portfolio"""
+    def update_sector_stocks(self, change):
+        """Update selected stocks based on sector selection"""
+        sector_stocks = []
+        for sector in self.sector_dropdown.value:
+            sector_stocks.extend(SECTOR_MAPPING[sector])
+        
+        self.selected_stocks = list(set(self.selected_stocks + sector_stocks))
+        self.update_stock_list()
         with self.analysis_output:
             clear_output()
-            if not self.selected_stocks:
-                print("Please select stocks to analyze")
-                return
-
-            print("Analyzing portfolio...")
-            results = []
-            stock_data = {}
-            portfolio_values = []
-
-            # Analyze each stock
-            for symbol in self.selected_stocks:
-                data, error = fetch_and_calculate_indicators(symbol)
-                if error:
-                    print(error)
-                    continue
-
-                stock_data[symbol] = data
-                current_price = float(data['Close'].iloc[-1])
-
-                results.append({
-                    'symbol': symbol,
-                    'current_price': round(current_price, 2),
-                    'rsi': round(float(data['RSI'].iloc[-1]), 2),
-                    'macd': round(float(data['MACD'].iloc[-1]), 2),
-                    'ema': round(float(data['EMA'].iloc[-1]), 2),
-                    'outlook': 'Bullish' if current_price > float(data['EMA'].iloc[-1]) else 'Bearish'
-                })
-
-                # Calculate daily portfolio value (equal weights initially)
-                if len(portfolio_values) == 0:
-                    portfolio_values = data['Close'] / len(self.selected_stocks)
-                else:
-                    portfolio_values += data['Close'] / len(self.selected_stocks)
-
-            print("Completed analyzing.")
-
-            # Display results table
-            df_results = pd.DataFrame(results)
-            display(HTML("<div class='analysis-results'><h3>Stock Analysis Results</h3></div>"))
-            display(HTML(df_results.to_html(classes='stock-table', index=False)))
-
-            # Filter bullish stocks and optimize
-            bullish_stocks = [r for r in results if r['outlook'] == 'Bullish']
-            if bullish_stocks:
-                weights, error = whale_optimization(bullish_stocks)
-                if error:
-                    print(error)
-                else:
-                    display(HTML("<div class='analysis-results'><h3>Portfolio Optimization Results</h3></div>"))
-
-                    # Create pie chart using Matplotlib
-                    labels = list(weights.keys())
-                    values = list(weights.values())
-
-                    fig_pie = plt.figure(figsize=(8, 8))
-                    plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, wedgeprops={'edgecolor': 'black'})
-                    plt.title('Optimized Portfolio Weights')
-                    plt.show()
-
-            else:
-                print("No bullish stocks found for optimization")
-
-
-    def add_stock(self, b):
-     """Add individual stock to the portfolio and clear previous analysis"""
-     stock = self.stock_input.value.strip().upper()
-     if stock and stock not in self.selected_stocks:
-        self.selected_stocks.append(stock)
-        self.update_stock_list()
-
-      # Clear previous analysis
-     with self.analysis_output:
-        clear_output()
-
-     self.stock_input.value = ""
-
-    def update_sector_stocks(self, change):
-     """Update selected stocks based on sector selection and clear previous analysis"""
-     sector_stocks = []
-     for sector in self.sector_dropdown.value:
-        sector_stocks.extend(SECTOR_MAPPING[sector])
-
-     self.selected_stocks = list(set(self.selected_stocks + sector_stocks))
-     self.update_stock_list()
-
-     # Clear previous analysis
-     with self.analysis_output:
-        clear_output()
-
 
     def update_stock_list(self):
         """Update the displayed list of selected stocks"""
         with self.stock_list_output:
             clear_output()
-            display(HTML("<div class='stock-list'><strong>Selected Stocks:</strong><ul>"))
-            for stock in sorted(self.selected_stocks):
-                display(HTML(f"<li>{stock}</li>"))
-            display(HTML("</ul></div>"))
+            if not self.selected_stocks:
+                display(HTML('''
+                <div class="selected-stocks-area">
+                    <p style="text-align: center; color: #6b7280; font-style: italic;">
+                        No stocks selected yet. Choose sectors or add individual stocks above.
+                    </p>
+                </div>
+                '''))
+            else:
+                stock_chips = ''.join([f'<span class="stock-chip">{stock}</span>' 
+                                     for stock in sorted(self.selected_stocks)])
+                display(HTML(f'''
+                <div class="selected-stocks-area">
+                    <h4 style="margin: 0 0 15px 0; color: #2c3e50;">
+                        Selected Stocks ({len(self.selected_stocks)}):
+                    </h4>
+                    {stock_chips}
+                </div>
+                '''))
 
-# Create and display the optimizer
-optimizer = PortfolioOptimizer()
+    def analyze_portfolio(self, b):
+        """Analyze the selected portfolio with modern UI"""
+        with self.analysis_output:
+            clear_output()
+            
+            if not self.selected_stocks:
+                display(HTML('''
+                <div class="modern-container">
+                    <div class="status-message status-error">
+                        ⚠️ Please select stocks to analyze
+                    </div>
+                </div>
+                '''))
+                return
+
+            # Show loading state
+            display(HTML('''
+            <div class="modern-container">
+                <div class="status-message status-info">
+                    <span class="loading-spinner"></span>
+                    Analyzing portfolio... This may take a few moments.
+                </div>
+            </div>
+            '''))
+
+            results = []
+            stock_data = {}
+            successful_analysis = 0
+
+            # Analyze each stock
+            for i, symbol in enumerate(self.selected_stocks):
+                # Update progress
+                progress = f"Analyzing {symbol} ({i+1}/{len(self.selected_stocks)})"
+                print(f"📊 {progress}")
+                
+                data, error = fetch_and_calculate_indicators(symbol)
+                if error:
+                    print(f"❌ {error}")
+                    continue
+
+                stock_data[symbol] = data
+                current_price = float(data['Close'].iloc[-1])
+                outlook, _ = apply_fuzzy_logic(data)
+                
+                if outlook is None:
+                    outlook = 'Neutral'
+
+                results.append({
+                    'symbol': symbol,
+                    'current_price': round(current_price, 2),
+                    'rsi': round(float(data['RSI'].iloc[-1]), 2),
+                    'macd': round(float(data['MACD'].iloc[-1]), 4),
+                    'ema': round(float(data['EMA'].iloc[-1]), 2),
+                    'outlook': outlook
+                })
+                successful_analysis += 1
+
+            # Clear loading message
+            clear_output()
+
+            if not results:
+                display(HTML('''
+                <div class="modern-container">
+                    <div class="status-message status-error">
+                        ❌ No data could be retrieved for the selected stocks
+                    </div>
+                </div>
+                '''))
+                return
+
+            # Display success message
+            display(HTML(f'''
+            <div class="modern-container">
+                <div class="status-message status-success">
+                    ✅ Successfully analyzed {successful_analysis} stocks
+                </div>
+            </div>
+            '''))
+
+            # Create and display results table
+            self.display_results_table(results)
+            
+            # Portfolio metrics
+            self.display_portfolio_metrics(results)
+
+            # Optimization
+            bullish_stocks = [r for r in results if r['outlook'] == 'Bullish']
+            if bullish_stocks:
+                self.display_optimization_results(bullish_stocks)
+            else:
+                display(HTML('''
+                <div class="modern-container">
+                    <div class="section-title">⚠️ Portfolio Optimization</div>
+                    <div class="status-message status-info">
+                        No bullish stocks found for optimization. Consider reviewing your stock selection or market conditions.
+                    </div>
+                </div>
+                '''))
+
+    def display_results_table(self, results):
+        """Display results in a modern table"""
+        df_results = pd.DataFrame(results)
+        
+        # Create HTML table with modern styling
+        table_html = '<table class="results-table">'
+        table_html += '''
+        <thead>
+            <tr>
+                <th>Stock Symbol</th>
+                <th>Current Price (₹)</th>
+                <th>RSI</th>
+                <th>MACD</th>
+                <th>EMA (₹)</th>
+                <th>Outlook</th>
+            </tr>
+        </thead>
+        <tbody>
+        '''
+        
+        for _, row in df_results.iterrows():
+            outlook_class = row['outlook'].lower()
+            table_html += f'''
+            <tr>
+                <td><strong>{row['symbol']}</strong></td>
+                <td>₹{row['current_price']}</td>
+                <td>{row['rsi']}</td>
+                <td>{row['macd']}</td>
+                <td>₹{row['ema']}</td>
+                <td><span class="{outlook_class}">{row['outlook']}</span></td>
+            </tr>
+            '''
+        
+        table_html += '</tbody></table>'
+        
+        display(HTML(f'''
+        <div class="modern-container">
+            <div class="section-title">📊 Stock Analysis Results</div>
+            {table_html}
+        </div>
+        '''))
+
+    def display_portfolio_metrics(self, results):
+        """Display portfolio metrics"""
+        total_stocks = len(results)
+        bullish_count = len([r for r in results if r['outlook'] == 'Bullish'])
+        bearish_count = len([r for r in results if r['outlook'] == 'Bearish'])
+        neutral_count = len([r for r in results if r['outlook'] == 'Neutral'])
+        
+        avg_rsi = np.mean([r['rsi'] for r in results])
+        
+        display(HTML(f'''
+        <div class="modern-container">
+            <div class="section-title">📈 Portfolio Overview</div>
+            <div class="grid-3">
+                <div class="metric-card">
+                    <div class="metric-value">{total_stocks}</div>
+                    <div class="metric-label">Total Stocks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color: #22c55e;">{bullish_count}</div>
+                    <div class="metric-label">Bullish Stocks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color: #ef4444;">{bearish_count}</div>
+                    <div class="metric-label">Bearish Stocks</div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="metric-card">
+                    <div class="metric-value" style="color: #f59e0b;">{neutral_count}</div>
+                    <div class="metric-label">Neutral Stocks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">{avg_rsi:.1f}</div>
+                    <div class="metric-label">Avg RSI</div>
+                </div>
+            </div>
+        </div>
+        '''))
+
+    def display_optimization_results(self, bullish_stocks):
+        """Display optimization results with pie chart"""
+        weights, error = whale_optimization(bullish_stocks)
+        if error:
+            display(HTML(f'''
+            <div class="modern-container">
+                <div class="status-message status-error">
+                    ❌ Optimization Error: {error}
+                </div>
+            </div>
+            '''))
+            return
+
+        display(HTML('''
+        <div class="modern-container">
+            <div class="section-title">🎯 Optimized Portfolio Weights</div>
+        </div>
+        '''))
+
+        # Create pie chart
+        labels = list(weights.keys())
+        values = list(weights.values())
+        
+        plt.style.use('default')
+        fig, ax = plt.subplots(figsize=(10, 8))
+        
+        # Create a beautiful color palette
+        colors = plt.cm.Set3(np.linspace(0, 1, len(labels)))
+        
+        wedges, texts, autotexts = ax.pie(values, labels=labels, autopct='%1.1f%%', 
+                                         startangle=90, colors=colors,
+                                         explode=[0.05] * len(labels),
+                                         shadow=True,
+                                         textprops={'fontsize': 10, 'fontweight': 'bold'})
+        
+        # Enhance the appearance
+        for autotext in autotexts:
+            autotext.set_color('white')
+            autotext.set_fontweight('bold')
+        
+        ax.set_title('Optimized Portfolio Allocation', fontsize=16, fontweight='bold', pad=20)
+        
+        # Equal axis aspect ratio ensures that pie is drawn as a circle
+        ax.axis('equal')
+        
+        plt.tight_layout()
+        plt.show()
+
+        # Display weight table
+        weight_html = '<table class="results-table" style="width: 60%; margin: 20px auto;">'
+        weight_html += '''
+        <thead>
+            <tr>
+                <th>Stock Symbol</th>
+                <th>Allocation (%)</th>
+                <th>Weight</th>
+            </tr>
+        </thead>
+        <tbody>
+        '''
+        
+        for stock, weight in sorted(weights.items(), key=lambda x: x[1], reverse=True):
+            weight_html += f'''
+            <tr>
+                <td><strong>{stock}</strong></td>
+                <td>{weight*100:.1f}%</td>
+                <td>{weight:.4f}</td>
+            </tr>
+            '''
+        
+        weight_html += '</tbody></table>'
+        
+        display(HTML(f'''
+        <div class="analysis-card">
+            {weight_html}
+        </div>
+        '''))
+
+# Create and display the modern optimizer
+print("🚀 Initializing Modern Portfolio Optimizer...")
+optimizer = ModernPortfolioOptimizer()
+print("✅ Portfolio Optimizer Ready!")
+
+# Additional utility functions for enhanced functionality
+def display_market_summary():
+    """Display a quick market summary"""
+    display(HTML('''
+    <div class="modern-container">
+        <div class="section-title">📈 Quick Market Indicators</div>
+        <div class="status-message status-info">
+            <strong>💡 Pro Tips:</strong><br>
+            • RSI > 70: Potentially overbought (consider selling)<br>
+            • RSI < 30: Potentially oversold (consider buying)<br>
+            • MACD > 0: Bullish momentum<br>
+            • Price > EMA: Upward trend
+        </div>
+    </div>
+    '''))
+
+def display_help_guide():
+    """Display help guide for users"""
+    display(HTML('''
+    <div class="modern-container">
+        <div class="section-title">❓ How to Use This Tool</div>
+        <div class="analysis-card">
+            <h4>🎯 Step-by-Step Guide:</h4>
+            <ol style="line-height: 2; font-size: 1.1rem;">
+                <li><strong>Select Sectors:</strong> Choose one or more sectors from the dropdown to automatically add sector stocks</li>
+                <li><strong>Add Individual Stocks:</strong> Enter specific NSE stock symbols (e.g., RELIANCE.NS, TCS.NS)</li>
+                <li><strong>Review Selection:</strong> Check your selected stocks in the chip display</li>
+                <li><strong>Analyze:</strong> Click "Analyze Portfolio" to get AI-powered insights</li>
+                <li><strong>Optimize:</strong> View the optimized allocation for bullish stocks</li>
+            </ol>
+            
+            <h4>📊 Understanding the Results:</h4>
+            <ul style="line-height: 1.8; font-size: 1rem;">
+                <li><strong>RSI (Relative Strength Index):</strong> Measures momentum (0-100 scale)</li>
+                <li><strong>MACD:</strong> Shows relationship between two moving averages</li>
+                <li><strong>EMA:</strong> Exponential Moving Average (trend indicator)</li>
+                <li><strong>Outlook:</strong> AI classification based on technical indicators</li>
+            </ul>
+        </div>
+    </div>
+    '''))
+
+def display_sample_usage():
+    """Show sample usage examples"""
+    display(HTML('''
+    <div class="modern-container">
+        <div class="section-title">🔥 Popular Stock Examples</div>
+        <div class="grid-2">
+            <div class="analysis-card">
+                <h4>🏢 Large Cap Favorites:</h4>
+                <div style="line-height: 1.8;">
+                    • RELIANCE.NS (Oil & Gas)<br>
+                    • TCS.NS (IT Services)<br>
+                    • HDFCBANK.NS (Banking)<br>
+                    • INFY.NS (IT Services)<br>
+                    • ITC.NS (FMCG)
+                </div>
+            </div>
+            <div class="analysis-card">
+                <h4>⚡ Growth Stocks:</h4>
+                <div style="line-height: 1.8;">
+                    • ADANIENT.NS (Diversified)<br>
+                    • BAJFINANCE.NS (NBFC)<br>
+                    • ASIANPAINT.NS (Paints)<br>
+                    • MARUTI.NS (Auto)<br>
+                    • SUNPHARMA.NS (Pharma)
+                </div>
+            </div>
+        </div>
+    </div>
+    '''))
+
+# Enhanced features for better user experience
+class AdvancedFeatures:
+    @staticmethod
+    def export_results_to_csv(results, filename="portfolio_analysis.csv"):
+        """Export analysis results to CSV"""
+        if results:
+            df = pd.DataFrame(results)
+            df.to_csv(filename, index=False)
+            print(f"✅ Results exported to {filename}")
+        else:
+            print("❌ No results to export")
+    
+    @staticmethod
+    def calculate_portfolio_risk(results):
+        """Calculate basic portfolio risk metrics"""
+        if not results:
+            return None
+        
+        prices = [r['current_price'] for r in results]
+        rsi_values = [r['rsi'] for r in results]
+        
+        return {
+            'price_volatility': np.std(prices) / np.mean(prices) * 100,
+            'avg_rsi': np.mean(rsi_values),
+            'risk_level': 'High' if np.std(prices) / np.mean(prices) > 0.3 else 'Medium' if np.std(prices) / np.mean(prices) > 0.15 else 'Low'
+        }
+    
+    @staticmethod
+    def suggest_diversification(selected_stocks):
+        """Suggest diversification improvements"""
+        sector_count = {}
+        for sector, stocks in SECTOR_MAPPING.items():
+            count = len([s for s in selected_stocks if s in stocks])
+            if count > 0:
+                sector_count[sector] = count
+        
+        suggestions = []
+        if len(sector_count) < 3:
+            suggestions.append("Consider adding stocks from more sectors for better diversification")
+        
+        max_sector = max(sector_count.values()) if sector_count else 0
+        if max_sector > len(selected_stocks) * 0.5:
+            suggestions.append("Your portfolio is heavily concentrated in one sector")
+        
+        return suggestions
+
+# Display additional features
+display(HTML('''
+<div class="modern-container">
+    <div class="section-title">🌟 Additional Features</div>
+    <div class="grid-3">
+        <div class="metric-card" onclick="display_help_guide()" style="cursor: pointer;">
+            <div class="metric-value" style="font-size: 2.5rem;">❓</div>
+            <div class="metric-label">Help Guide</div>
+        </div>
+        <div class="metric-card" onclick="display_market_summary()" style="cursor: pointer;">
+            <div class="metric-value" style="font-size: 2.5rem;">📊</div>
+            <div class="metric-label">Market Tips</div>
+        </div>
+        <div class="metric-card" onclick="display_sample_usage()" style="cursor: pointer;">
+            <div class="metric-value" style="font-size: 2.5rem;">🔥</div>
+            <div class="metric-label">Examples</div>
+        </div>
+    </div>
+</div>
+'''))
+
+# Create interactive buttons for additional features
+help_button = widgets.Button(
+    description='📖 Show Help Guide',
+    button_style='info',
+    layout=widgets.Layout(width='180px', height='40px')
+)
+
+tips_button = widgets.Button(
+    description='💡 Market Tips',
+    button_style='warning',
+    layout=widgets.Layout(width='180px', height='40px')
+)
+
+examples_button = widgets.Button(
+    description='🔥 View Examples',
+    button_style='success',
+    layout=widgets.Layout(width='180px', height='40px')
+)
+
+def show_help(b):
+    display_help_guide()
+
+def show_tips(b):
+    display_market_summary()
+
+def show_examples(b):
+    display_sample_usage()
+
+help_button.on_click(show_help)
+tips_button.on_click(show_tips)
+examples_button.on_click(show_examples)
+
+display(HTML('<div class="modern-container"><div class="section-title">🎯 Quick Actions</div></div>'))
+display(widgets.HBox([help_button, tips_button, examples_button]))
+
+# Performance monitoring
+class PerformanceMonitor:
+    def __init__(self):
+        self.start_time = None
+        self.end_time = None
+    
+    def start_timer(self):
+        self.start_time = datetime.now()
+    
+    def end_timer(self):
+        self.end_time = datetime.now()
+        if self.start_time:
+            duration = (self.end_time - self.start_time).total_seconds()
+            return f"⏱️ Analysis completed in {duration:.2f} seconds"
+        return ""
+
+# Footer with credits and information
+display(HTML('''
+<div class="modern-container" style="margin-top: 50px; text-align: center;">
+    <div class="section-title">🎯 Portfolio Optimizer v2.0</div>
+    <div style="color: #6b7280; line-height: 1.8;">
+        <p><strong>Powered by:</strong> Whale Optimization Algorithm + Fuzzy Logic + Technical Analysis</p>
+        <p><strong>Data Source:</strong> Yahoo Finance (NSE)</p>
+        <p><strong>Features:</strong> Real-time analysis, AI optimization, Modern UI</p>
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+            <em>⚠️ Disclaimer: This tool is for educational purposes only. Always consult with financial advisors before making investment decisions.</em>
+        </p>
+    </div>
+</div>
+'''))
+
+print("🎉 All features loaded successfully!")
+print("📝 Use the interface above to start analyzing your portfolio")
+print("💫 Click the Quick Action buttons for help and examples")
