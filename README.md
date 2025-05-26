@@ -98,3 +98,9 @@ This makes it effective for **non-linear, multi-objective financial problems**.
 - **Global optimization** using nature-inspired algorithm  
 - Customizable constraints (e.g., budget, number of stocks)  
 - Visual performance tracking
+
+
+### 📷 Screenshots
+
+![Dashboard Screenshot](assets/screenshot1.png)
+![Result Chart](assets/result_chart.png)
